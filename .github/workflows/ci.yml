@@ -1,38 +1,38 @@
 name: CI
 
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+    push:
+        branches: [master, main]
+    pull_request:
+        branches: [master, main]
 
 jobs:
-  ci:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.13", "3.14"]
+    ci:
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                python-version: ["3.13", "3.14"]
 
-    steps:
-      - uses: actions/checkout@v4
+        steps:
+            - uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
+            - uses: actions/setup-python@v5
+              with:
+                  python-version: ${{ matrix.python-version }}
 
-      - uses: astral-sh/setup-uv@v5
+            - uses: astral-sh/setup-uv@v5
 
-      - name: Install dependencies
-        run: uv sync --all-extras
+            - name: Install dependencies
+              run: uv sync --all-extras
 
-      - name: Lint
-        run: uv run ruff check .
+            - name: Lint
+              run: uv run ruff check .
 
-      - name: Check formatting
-        run: uv run ruff format . --check
+            - name: Check formatting
+              run: uv run ruff format . --check
 
-      - name: Typecheck
-        run: uv run ty check app/
+            - name: Typecheck
+              run: uv run ty check app/
 
-      - name: Test
-        run: uv run pytest
+            - name: Test
+              run: uv run pytest
